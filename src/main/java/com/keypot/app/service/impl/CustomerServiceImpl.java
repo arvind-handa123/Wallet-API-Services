@@ -30,6 +30,10 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Long createAccount(String customerName, String email) {
 		Customer customer = null;
+		/**
+		 * create account only if given email id is not registerred with any
+		 * other account.
+		 */
 		if (!isAccountAlreadyExists(email)) {
 			Long accountNumber = getAccountNumber(new Random().nextInt(MAX_VALUE));
 			UserAccount userAccount = createAccount(accountNumber);
@@ -55,7 +59,6 @@ public class CustomerServiceImpl implements CustomerService {
 		userAccount.setAccountNumber(accountNumber);
 		userAccount.setAvailableBalance(0d);
 		userAccountRepository.save(userAccount);
-
 		return userAccount;
 	}
 
@@ -113,6 +116,9 @@ public class CustomerServiceImpl implements CustomerService {
 	public UserAccount withdrawAmount(Long accountNumber, Double amount) {
 		UserAccount userAccount = userAccountRepository.findOne(accountNumber);
 		if (userAccount != null) {
+			/*
+			 * update account after reducing withdrawl amount
+			 */
 			Double availableBalance = userAccount.getAvailableBalance() - amount;
 			if (availableBalance >= MINIMUM_BALANCE) {
 				userAccount = UpdateAccount(userAccount, amount, availableBalance, TraxnType.DEBIT);
