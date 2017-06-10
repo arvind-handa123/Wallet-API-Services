@@ -1,7 +1,7 @@
 # Wallet-API-Services
 deposite and withdraw amount from a wallet
 
-Your task is to create a *spring-boot* web application which can be used by a bank. Obviously, we don't want you to set up all the services provided by a bank. Still you should implement an API which can be used by an administrator of the bank to perform the following tasks:
+Your task is to create a *spring-boot* web application which can be used by a bank. You should implement an API which can be used by an administrator of the bank to perform the following tasks:
  
 1. Create an account for a customer by providing the customer's name and email and get back an unique account number.
 2. Deposit money to a previously created account by using the account number obtained in the previous step.

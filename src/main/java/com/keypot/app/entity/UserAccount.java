@@ -23,7 +23,7 @@ public class UserAccount {
 	}
 
 	public enum TraxnStatus {
-		SUCCESS, FAIL, INSUFFICIENT_BALANCE;
+		SUCCESS, FAIL, INSUFFICIENT_BALANCE, ACCOUNT_DOESNT_EXIST;
 	}
 
 	@Id
@@ -31,12 +31,9 @@ public class UserAccount {
 	private Date createdTime;
 	private Date updatedTime;
 
-
-
 	private Double debitedAmount;
 	private Double creditedAmount;
 	private Double availableBalance;
-	
 
 	public Double getDebitedAmount() {
 		return debitedAmount;

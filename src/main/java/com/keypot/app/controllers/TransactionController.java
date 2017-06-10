@@ -25,13 +25,21 @@ public class TransactionController {
 	@RequestMapping(value = "/deposite", method = RequestMethod.POST)
 	public ResponseEntity<?> deposite(@RequestParam("accountNumber") Long accountNumber,
 			@RequestParam("amount") Double amount) {
-		UserAccount userAccount = customerService.addAmount(accountNumber, amount);
 		AccountDto accountDto = new AccountDto();
-		accountDto.setAccountNumber(accountNumber);
-		accountDto.setAvailableBalance(userAccount.getAvailableBalance());
-		accountDto.setCreditedAmount(amount);
-		accountDto.setTraxnType(TraxnType.CREDIT);
-		accountDto.setTraxnStatus(userAccount.getTraxnStatus());
+		UserAccount userAccount = customerService.addAmount(accountNumber, amount);
+		if (userAccount != null) {
+			accountDto.setAccountNumber(accountNumber);
+			accountDto.setAvailableBalance(userAccount.getAvailableBalance());
+			accountDto.setCreditedAmount(amount);
+			accountDto.setTraxnType(TraxnType.CREDIT);
+			accountDto.setTraxnStatus(userAccount.getTraxnStatus());
+		} else {
+			/*
+			 * return status in dto saying Account doesn't exists
+			 */
+			accountDto.setTraxnStatus(TraxnStatus.ACCOUNT_DOESNT_EXIST);
+			return new ResponseEntity<>(accountDto, HttpStatus.NOT_ACCEPTABLE);
+		}
 		return new ResponseEntity<>(accountDto, HttpStatus.OK);
 
 	}
@@ -41,13 +49,22 @@ public class TransactionController {
 			@RequestParam("amount") Double amount) {
 		UserAccount userAccount = customerService.withdrawAmount(accountNumber, amount);
 		AccountDto accountDto = new AccountDto();
-		if (TraxnStatus.SUCCESS.equals(userAccount.getTraxnStatus())) {
-			accountDto.setAccountNumber(accountNumber);
-			accountDto.setAvailableBalance(userAccount.getAvailableBalance());
-			accountDto.setDebitedAmount(amount);
+		if (userAccount != null) {
+			if (TraxnStatus.SUCCESS.equals(userAccount.getTraxnStatus())) {
+				accountDto.setAccountNumber(accountNumber);
+				accountDto.setAvailableBalance(userAccount.getAvailableBalance());
+				accountDto.setDebitedAmount(amount);
+			} else {
+				accountDto.setTraxnType(TraxnType.DEBIT);
+				accountDto.setTraxnStatus(userAccount.getTraxnStatus());
+			}
 		} else {
-			accountDto.setTraxnType(TraxnType.DEBIT);
-			accountDto.setTraxnStatus(userAccount.getTraxnStatus());
+			/*
+			 * return status in dto saying Account doesn't exists
+			 */
+			accountDto.setTraxnStatus(TraxnStatus.ACCOUNT_DOESNT_EXIST);
+			return new ResponseEntity<>(accountDto, HttpStatus.UNAUTHORIZED);
+
 		}
 		return new ResponseEntity<>(accountDto, HttpStatus.OK);
 

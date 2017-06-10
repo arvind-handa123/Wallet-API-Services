@@ -92,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
 			 */
 			Double availableBalance = userAccount.getAvailableBalance() + amount;
 			userAccount = UpdateAccount(userAccount, amount, availableBalance, TraxnType.CREDIT);
-		}
+		} 
 		return userAccount;
 
 	}
@@ -127,7 +127,7 @@ public class CustomerServiceImpl implements CustomerService {
 				userAccountRepository.save(userAccount);
 			}
 
-		}
+		} 
 		return userAccount;
 	}
 
