@@ -29,13 +29,24 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Long createAccount(String customerName, String email) {
-		Long accountNumber = getAccountNumber(new Random().nextInt(MAX_VALUE));
-		UserAccount userAccount = createAccount(accountNumber);
 		Customer customer = null;
-		if (userAccount != null)
-			customer = createUser(customerName, email, accountNumber);
-		return customer.getId();
+		if (!isAccountAlreadyExists(email)) {
+			Long accountNumber = getAccountNumber(new Random().nextInt(MAX_VALUE));
+			UserAccount userAccount = createAccount(accountNumber);
+			if (userAccount != null)
+				customer = createUser(customerName, email, accountNumber);
+		} else {
+			return null;
+		}
+		return customer.getAccountNumber();
 
+	}
+
+	private boolean isAccountAlreadyExists(String email) {
+		Customer customer = customerRepository.findByEmailId(email);
+		if (customer != null)
+			return true;
+		return false;
 	}
 
 	@Transactional

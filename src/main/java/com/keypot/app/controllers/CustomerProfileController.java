@@ -20,10 +20,18 @@ public class CustomerProfileController {
 	@RequestMapping(value = "/create/account", method = RequestMethod.POST)
 	public ResponseEntity<?> createAccount(@RequestParam(name = "customerName") String customerName,
 			@RequestParam(name = "email") String email) {
-		Long accountNumber = customerService.createAccount(customerName, email);
 		CustomerDto customerDto = new CustomerDto();
-		customerDto.setAccountNumber(accountNumber);
-		return new ResponseEntity<>(customerDto,HttpStatus.OK);
+		Long accountNumber = customerService.createAccount(customerName, email);
+		if (accountNumber != null) {
+			customerDto.setAccountNumber(accountNumber);
+			customerDto.setIsAccountCreated(true);
+
+		} else {
+			customerDto.setIsAccountCreated(false);
+			customerDto.setRemark("Given email id alraeady exist!");
+			return new ResponseEntity<>(customerDto,HttpStatus.IM_USED);
+		}
+		return new ResponseEntity<>(customerDto, HttpStatus.OK);
 	}
 
 }
